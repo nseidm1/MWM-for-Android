@@ -133,7 +133,7 @@ public class MetaWatchService extends Service {
 		static final int IDLE = 1;
 		static final int APPLICATION = 2;
 		static final int NOTIFICATION = 3;
-		static final int CALL = 3;
+		static final int CALL = 4;
 	}
 	
 	final static class Msg {
@@ -1089,9 +1089,26 @@ public class MetaWatchService extends Service {
 					Protocol.disableButton(0, 0, MetaWatchService.WatchBuffers.APPLICATION); 
 					Protocol.disableButton(0, 0, MetaWatchService.WatchBuffers.NOTIFICATION); 					
 				
-					if (watchState == WatchStates.OFF || watchState == WatchStates.IDLE) {
-						Idle.toIdle(this);
-						Idle.updateIdle(this, true);
+					// Init currently shown page
+					switch (watchState) {
+						case WatchStates.CALL:
+							if (Call.isRinging) 
+								Call.startRinging(context, Call.phoneNumber);
+							else 
+								Call.exitCall(context);
+							break;
+						case WatchStates.NOTIFICATION:
+							Notification.replay(context);
+							break;
+						case WatchStates.APPLICATION:
+							Application.toApp(context);
+							Application.updateAppMode(this);
+							break;
+						case WatchStates.IDLE:
+						case WatchStates.OFF:
+							Idle.toIdle(context);
+							Idle.updateIdle(this, true);
+							break;
 					}
 					
 					SharedPreferences sharedPreferences = PreferenceManager
@@ -1102,7 +1119,7 @@ public class MetaWatchService extends Service {
 					}
 					
 				}
-			
+
 				Protocol.getRealTimeClock();
 				
 				SharedPreferences sharedPreferences = PreferenceManager
@@ -1116,7 +1133,7 @@ public class MetaWatchService extends Service {
 				}
 				
 				Idle.activateButtons(this);
-								
+												
 			} else if (bytes[2] == eMessageType.ReadBatteryVoltageResponse.msg) {
 				boolean powerGood = bytes[4] > 0;
 				boolean batteryCharging = bytes[5] > 0;
@@ -1163,6 +1180,8 @@ public class MetaWatchService extends Service {
 				
 				Protocol.setRealTimeClock(context);
 				
+			} else if (bytes[2] == eMessageType.DiagnosticLoopback.msg) {
+				Protocol.rateTest();
 			} else {
 				if (Preferences.logging) Log.d(MetaWatch.TAG,
 						"MetaWatchService.readFromDevice(): Unknown message : 0x"+Integer.toString((bytes[2] & 0xff) + 0x100, 16).substring(1) + ", ");
