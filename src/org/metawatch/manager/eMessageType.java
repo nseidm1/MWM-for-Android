@@ -118,6 +118,7 @@ public enum eMessageType
   LedChange(0xc0),
   
   QueryMemoryMsg(0xd0),
+  RateTestMsg(0xd2),
     
   AccelerometerSteps(0xea),
   AccelerometerRawData(0xeb);

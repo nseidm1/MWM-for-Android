@@ -53,7 +53,8 @@
 	    <Preference android:key="application_start" android:title="Application Start (LCD)"/>
     	<Preference android:key="application_update" android:title="Application Update (LCD)"/>
     	<Preference android:key="application_stop" android:title="Application Stop (LCD)"/>
-    	<Preference android:key="vibrate" android:title="Vibrate (LCD/OLED)"/>
+      <Preference android:key="rate_test" android:title="Rate Test"/>
+      <Preference android:key="vibrate" android:title="Vibrate (LCD/OLED)"/>
     	<Preference android:key="load_template" android:title="Load Template (Idle) (LCD)"/>
     	<Preference android:key="write_buffer" android:title="Write Buffer (Idle) (LCD)"/>
     	<Preference android:key="update_display" android:title="Update Display (Idle) (LCD)"/>    

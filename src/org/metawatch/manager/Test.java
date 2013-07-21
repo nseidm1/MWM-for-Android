@@ -444,6 +444,13 @@ public class Test extends PreferenceActivity {
 			}
 		});
 		
+		preferenceScreen.findPreference("rate_test").setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			public boolean onPreferenceClick(Preference preference) {
+				Protocol.rateTest();
+				return true;
+			}
+		});
+
 		super.onStart();
 	}
 	

@@ -1056,6 +1056,18 @@ public class Protocol {
 		enqueue(bytes);
 	}
 
+	public static void rateTest() {
+		if (Preferences.logging) Log.d(MetaWatch.TAG, "Protocol.rateTest()");
+		byte[] bytes = new byte[4];
+
+		bytes[0] = eMessageType.start;
+		bytes[1] = (byte) (bytes.length+2); 
+		bytes[2] = eMessageType.RateTestMsg.msg;
+		bytes[3] = 0x00; 
+		
+		enqueue(bytes);
+	}
+	
 	public static int getQueueLength() {
 		return sendQueue.size();
 	}
