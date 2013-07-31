@@ -421,7 +421,10 @@ public class WeatherWidget implements InternalWidget {
 				
 				Bitmap image = Utils.getBitmap(context, Monitors.weatherData.forecast[weatherIndex].getIcon());
 				canvas.drawBitmap(image, x, 4, null);
-				Utils.drawOutlinedText(Monitors.weatherData.forecast[weatherIndex].getDay(), canvas, x, 6, paintSmall, paintSmallOutline);
+				int topY = 6;
+				if (Preferences.displayWidgetRowSeparator)
+					topY = 7;
+				Utils.drawOutlinedText(Monitors.weatherData.forecast[weatherIndex].getDay(), canvas, x, topY, paintSmall, paintSmallOutline);
 				
 				Utils.drawOutlinedText("H "+Monitors.weatherData.forecast[weatherIndex].getTempHigh(), canvas, x, 25, paintSmall, paintSmallOutline);
 				Utils.drawOutlinedText("L "+Monitors.weatherData.forecast[weatherIndex].getTempLow(), canvas, x, 31, paintSmall, paintSmallOutline);
