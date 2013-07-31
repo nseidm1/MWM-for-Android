@@ -305,10 +305,10 @@ public class WeatherWidget implements InternalWidget {
 								
 			// temperatures
 			if (Monitors.weatherData.celsius) {
-				Utils.drawOutlinedText(Monitors.weatherData.temp+"캜", canvas, 0, 7, paintSmall, paintSmallOutline);
+				Utils.drawOutlinedText(Monitors.weatherData.temp+"째C", canvas, 0, 7, paintSmall, paintSmallOutline);
 			}
 			else {
-				Utils.drawOutlinedText(Monitors.weatherData.temp+"캟", canvas, 0, 7, paintSmall, paintSmallOutline);
+				Utils.drawOutlinedText(Monitors.weatherData.temp+"째F", canvas, 0, 7, paintSmall, paintSmallOutline);
 			}
 			paintLarge.setTextAlign(Paint.Align.LEFT);
 						
@@ -503,10 +503,10 @@ public class WeatherWidget implements InternalWidget {
 			string.append(Monitors.weatherData.temp);
 			
 			if (Monitors.weatherData.celsius) {
-				string.append("캜");
+				string.append("째C");
 			}
 			else {
-				string.append("캟");
+				string.append("째F");
 			}
 			Utils.drawOutlinedText(string.toString(), canvas, 80, 5, paintSmall, paintSmallOutline);
 			

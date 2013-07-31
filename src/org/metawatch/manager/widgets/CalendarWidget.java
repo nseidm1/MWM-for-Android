@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.metawatch.manager.FontCache;
 import org.metawatch.manager.MetaWatch;
@@ -360,8 +362,11 @@ public class CalendarWidget implements InternalWidget {
 			StaticLayout layout = new StaticLayout(text, paintSmall, widget.width-iconSpace, Layout.Alignment.ALIGN_CENTER, 1.2f, 0, false);
 			int height = layout.getHeight();
 			int textY = 16 - (height/2);
-			if(textY<0) {
-				textY=0;
+			int topY = 0;
+			if (Preferences.displayWidgetRowSeparator)
+				topY = 2;
+			if(textY<topY) {
+				textY=topY;
 			}
 			canvas.translate(iconSpace, textY); //position the text
 			layout.draw(canvas);
