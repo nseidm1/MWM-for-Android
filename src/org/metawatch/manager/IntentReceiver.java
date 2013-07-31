@@ -209,9 +209,7 @@ public class IntentReceiver extends BroadcastReceiver {
 				if (Preferences.logging) Log.d(MetaWatch.TAG, "Detected outgoing call");
 				Call.inCall = true;
 				if(intent.hasExtra("android.intent.extra.PHONE_NUMBER"))
-					Call.phoneNumber = intent.getStringExtra("android.intent.extra.PHONE_NUMBER");
-				Idle.updateIdle(context, true);
-				
+					Call.phoneNumber = intent.getStringExtra("android.intent.extra.PHONE_NUMBER");				
 			}
 			else if (action.equals("com.fsck.k9.intent.action.EMAIL_RECEIVED")) {
 				
