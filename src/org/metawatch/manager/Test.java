@@ -451,6 +451,29 @@ public class Test extends PreferenceActivity {
 			}
 		});
 
+		preferenceScreen.findPreference("read_log").setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			public boolean onPreferenceClick(Preference preference) {
+				Protocol.readLog(null,null);
+				return true;
+			}
+		});
+
+		preferenceScreen.findPreference("enable_log").setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			public boolean onPreferenceClick(Preference preference) {
+				Protocol.controlLog(true);
+			   	NotificationBuilder.createOtherNotification(context, null, "Debug log", "Debug logger is enabled.", 1);
+				return true;
+			}
+		});
+
+		preferenceScreen.findPreference("disable_log").setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			public boolean onPreferenceClick(Preference preference) {
+				Protocol.controlLog(false);
+			   	NotificationBuilder.createOtherNotification(context, null, "Debug log", "Debug logger is disabled.", 1);
+				return true;
+			}
+		});
+
 		super.onStart();
 	}
 	

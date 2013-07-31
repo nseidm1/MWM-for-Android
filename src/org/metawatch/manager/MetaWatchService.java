@@ -1186,6 +1186,8 @@ public class MetaWatchService extends Service {
 				
 			} else if (bytes[2] == eMessageType.DiagnosticLoopback.msg) {
 				Protocol.rateTest();
+			} else if (bytes[2] == eMessageType.ReadLogResponse.msg) {
+				Protocol.readLog(this, bytes);
 			} else {
 				if (Preferences.logging) Log.d(MetaWatch.TAG,
 						"MetaWatchService.readFromDevice(): Unknown message : 0x"+Integer.toString((bytes[2] & 0xff) + 0x100, 16).substring(1) + ", ");
