@@ -210,6 +210,7 @@ public class MetaWatchService extends Service {
 		public static boolean readCalendarDuringMeeting = true;
 		public static int readCalendarMinDurationToMeetingEnd = 15;
 		public static boolean displayLocationInSmallCalendarWidget = false;
+		public static String locationRegexp = "Room:\\s*([0-9]+)\\s*([a-zA-Z]*)\\s";
 		public static boolean eventDateInCalendarWidget = false;
 		public static boolean displayWidgetRowSeparator = false;
 		public static boolean overlayWeatherText = false;
@@ -361,6 +362,8 @@ public class MetaWatchService extends Service {
 				Integer.toString(Preferences.readCalendarMinDurationToMeetingEnd)));
 		Preferences.displayLocationInSmallCalendarWidget = sharedPreferences.getBoolean("DisplayLocationInSmallCalendarWidget",
 				Preferences.displayLocationInSmallCalendarWidget);
+		Preferences.locationRegexp = sharedPreferences.getString("LocationRegexp",
+				Preferences.locationRegexp);
 		Preferences.eventDateInCalendarWidget = sharedPreferences.getBoolean("EventDateInCalendarWidget",
 				Preferences.eventDateInCalendarWidget);
 		Preferences.displayWidgetRowSeparator = sharedPreferences.getBoolean("DisplayWidgetRowSeparator",
