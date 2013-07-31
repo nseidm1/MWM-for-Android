@@ -61,6 +61,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
@@ -1055,11 +1056,6 @@ public class MetaWatchService extends Service {
 					watchGen = WatchGen.GEN1;
 					if (Preferences.logging) Log.d(MetaWatch.TAG,
 							"MetaWatchService.readFromDevice(): device type response; analog watch (gen1)");
-
-					if (watchState == WatchStates.OFF || watchState == WatchStates.IDLE) {
-						Idle.toIdle(this);
-						Idle.updateIdle(this, true);
-					}
 					
 					SharedPreferences sharedPreferences = PreferenceManager
 							.getDefaultSharedPreferences(this);
@@ -1092,28 +1088,6 @@ public class MetaWatchService extends Service {
 					Protocol.disableButton(0, 0, MetaWatchService.WatchBuffers.IDLE); 
 					Protocol.disableButton(0, 0, MetaWatchService.WatchBuffers.APPLICATION); 
 					Protocol.disableButton(0, 0, MetaWatchService.WatchBuffers.NOTIFICATION); 					
-				
-					// Init currently shown page
-					switch (watchState) {
-						case WatchStates.CALL:
-							if (Call.isRinging) 
-								Call.startRinging(context, Call.phoneNumber);
-							else 
-								Call.exitCall(context);
-							break;
-						case WatchStates.NOTIFICATION:
-							Notification.replay(context);
-							break;
-						case WatchStates.APPLICATION:
-							Application.toApp(context);
-							Application.updateAppMode(this);
-							break;
-						case WatchStates.IDLE:
-						case WatchStates.OFF:
-							Idle.toIdle(context);
-							Idle.updateIdle(this, true);
-							break;
-					}
 					
 					SharedPreferences sharedPreferences = PreferenceManager
 							.getDefaultSharedPreferences(this);
@@ -1124,6 +1098,29 @@ public class MetaWatchService extends Service {
 					
 				}
 
+				// Init currently shown page
+				switch (watchState) {
+					case WatchStates.CALL:
+						if (Call.isRinging) 
+							Call.startRinging(context, Call.phoneNumber);
+						else 
+							Call.exitCall(context);
+						break;
+					case WatchStates.NOTIFICATION:
+						Notification.replay(context);
+						break;
+					case WatchStates.APPLICATION:
+						Application.toApp(context);
+						Application.updateAppMode(this);
+						break;
+					case WatchStates.IDLE:
+					case WatchStates.OFF:
+						Idle.toIdle(context);
+						Idle.updateIdle(this, true);
+						break;
+				}
+			
+				Protocol.setTimeDateFormat(this);
 				Protocol.getRealTimeClock();
 				
 				SharedPreferences sharedPreferences = PreferenceManager
@@ -1205,7 +1202,6 @@ public class MetaWatchService extends Service {
 			}
 				
 		}
-		
 	}
 	
 	private void resetConnection() {
