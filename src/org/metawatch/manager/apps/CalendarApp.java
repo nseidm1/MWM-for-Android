@@ -296,6 +296,13 @@ public class CalendarApp extends ApplicationBase {
 						}
 						
 						builder.append(entry.title);
+						
+						if (entry.location.length()>0) {
+							builder.append(" [");
+							builder.append(entry.location);
+							builder.append("]");
+							
+						}
 					
 						if (entry.isAllDay) {
 							builder.append(" (All day)");
