@@ -49,6 +49,10 @@ public class CalendarApp extends ApplicationBase {
 	public final static byte CALENDAR_PREV = 43;
 	public final static byte CALENDAR_NEXT = 44;
 	
+	CalendarApp() {
+		currentView = Preferences.defaultCalendarView;		
+	}
+	
 	@Override
 	public AppData getInfo() {
 		return appData;
@@ -57,7 +61,7 @@ public class CalendarApp extends ApplicationBase {
 	@Override
 	public void activate(Context context, int watchType) {
 		refresh(context);
-		
+			
 		if (watchType == WatchType.DIGITAL) {
 			Protocol.enableButton(1, 1, CALENDAR_FLIPVIEW, MetaWatchService.WatchBuffers.APPLICATION); // right middle - press
 			Protocol.enableButton(2, 1, CALENDAR_TODAY, MetaWatchService.WatchBuffers.APPLICATION); // right bottom - press

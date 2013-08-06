@@ -220,6 +220,7 @@ public class MetaWatchService extends Service {
 		public static boolean showNotificationQueue = false;
 		public static boolean dumpWatchScreenshots = false;
 		public static int appLaunchMode = AppLaunchMode.POPUP;
+		public static int defaultCalendarView = 0;
 		public static boolean autoSpeakerphone = false;
 		public static boolean showActionsInCall = true;
 		public static String themeName = "";
@@ -418,6 +419,8 @@ public class MetaWatchService extends Service {
 							Integer.toString(Preferences.smsLoopInterval)));
 			Preferences.appLaunchMode = Integer.valueOf(sharedPreferences.getString(
 					"AppLaunchMode", Integer.toString(Preferences.appLaunchMode)));
+			Preferences.defaultCalendarView = Integer.valueOf(sharedPreferences.getString(
+					"DefaultCalendarView", Integer.toString(Preferences.defaultCalendarView)));
 			Preferences.calendarLookahead = Integer.valueOf(sharedPreferences
 					.getString("CalendarLookahead", 
 							Integer.toString(Preferences.calendarLookahead)));
