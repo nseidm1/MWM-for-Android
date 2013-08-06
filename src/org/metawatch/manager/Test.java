@@ -446,7 +446,7 @@ public class Test extends PreferenceActivity {
 		
 		preferenceScreen.findPreference("rate_test").setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			public boolean onPreferenceClick(Preference preference) {
-				Protocol.rateTest();
+				Protocol.rateTest(Protocol.RateTestTypes.RATE_TEST_MSG_ONLY);
 				return true;
 			}
 		});
@@ -470,6 +470,13 @@ public class Test extends PreferenceActivity {
 			public boolean onPreferenceClick(Preference preference) {
 				Protocol.controlLog(false);
 			   	NotificationBuilder.createOtherNotification(context, null, "Debug log", "Debug logger is disabled.", 1);
+				return true;
+			}
+		});
+
+		preferenceScreen.findPreference("random_idle_bitmap_rate_test").setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			public boolean onPreferenceClick(Preference preference) {
+				Protocol.rateTest(Protocol.RateTestTypes.RANDOM_IDLE_BITMAP);
 				return true;
 			}
 		});

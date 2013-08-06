@@ -49,8 +49,9 @@
         <Preference android:key="discover_apps" android:title="Send App Discovery Message" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Debugging">
+    <PreferenceCategory android:title="Firmware Debugging">
       <Preference android:key="rate_test" android:title="Rate Test"/>
+      <Preference android:key="random_idle_bitmap_rate_test" android:title="Random Idle Bitmap Rate Test"/>
       <Preference android:key="enable_log" android:title="Enable Debug Log (Gen2 only)"/>
       <Preference android:key="disable_log" android:title="Disable Debug Log (Gen2 only)"/>
       <Preference android:key="read_log" android:title="Read Debug Log (Gen2 only)"/>

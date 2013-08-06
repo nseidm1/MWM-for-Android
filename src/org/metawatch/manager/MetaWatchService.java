@@ -1182,7 +1182,7 @@ public class MetaWatchService extends Service {
 				Protocol.setRealTimeClock(context);
 				
 			} else if (bytes[2] == eMessageType.DiagnosticLoopback.msg) {
-				Protocol.rateTest();
+				Protocol.rateTest(-1);
 			} else if (bytes[2] == eMessageType.ReadLogResponse.msg) {
 				Protocol.readLog(this, bytes);
 			} else {

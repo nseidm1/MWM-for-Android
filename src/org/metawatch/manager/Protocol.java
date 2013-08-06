@@ -48,6 +48,7 @@ import org.metawatch.manager.MetaWatchService.ConnectionState;
 import org.metawatch.manager.MetaWatchService.Msg;
 import org.metawatch.manager.MetaWatchService.Preferences;
 import org.metawatch.manager.MetaWatchService.WatchBuffers;
+import org.metawatch.manager.MetaWatchService.WatchType;
 
 import android.content.Context;
 import android.content.Intent;
@@ -77,6 +78,15 @@ public class Protocol {
 	
 	private static int logPos;
 	private static String logPath;
+	
+	public final static class RateTestTypes {
+		public static final int RATE_TEST_MSG_ONLY = 0;
+		public static final int RANDOM_IDLE_BITMAP = 1;
+	}
+	private static int rateTestType = RateTestTypes.RATE_TEST_MSG_ONLY;
+	private static Bitmap currentRandomBitmap=null;
+	private static Bitmap evenRandomBitmap=null;
+	private static Bitmap oddRandomBitmap=null;
   
 	public static void resetLCDDiffBuffer() {
 		LCDDiffBuffer = new byte[3][48][30];
@@ -1070,8 +1080,34 @@ public class Protocol {
 		enqueue(bytes);
 	}
 
-	public static void rateTest() {
+	public static void rateTest(int type) {
 		if (Preferences.logging) Log.d(MetaWatch.TAG, "Protocol.rateTest()");
+		
+		if (type==-1) type = rateTestType; 
+		rateTestType = type;
+		
+		switch(type) {
+			case RateTestTypes.RANDOM_IDLE_BITMAP:
+				if (evenRandomBitmap==null) {
+					final int width = (MetaWatchService.watchType==WatchType.DIGITAL) ? 96 : 80;
+					final int height = (MetaWatchService.watchType==WatchType.DIGITAL) ? 96 : 32;
+					evenRandomBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+					oddRandomBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+					for (int x=0;x<width;x++)
+						for (int y=0;y<height;y++) {
+							evenRandomBitmap.setPixel(x, y, Math.random() >= 0.5 ? Color.BLACK : Color.WHITE);
+							oddRandomBitmap.setPixel(x, y, Math.random() >= 0.5 ? Color.BLACK : Color.WHITE);
+						}
+				}
+				if ((currentRandomBitmap==null)||(currentRandomBitmap==oddRandomBitmap))
+					currentRandomBitmap=evenRandomBitmap;
+				else
+					currentRandomBitmap=oddRandomBitmap;
+				sendLcdBitmap(currentRandomBitmap, MetaWatchService.WatchBuffers.IDLE);
+				updateLcdDisplay(MetaWatchService.WatchBuffers.IDLE);
+				break;
+		}
+		
 		byte[] bytes = new byte[4];
 
 		bytes[0] = eMessageType.start;
@@ -1134,7 +1170,7 @@ public class Protocol {
 					intent.setAction(android.content.Intent.ACTION_VIEW);
 					File file = new File(logPath);
 					intent.setDataAndType(Uri.fromFile(file), "text/plain");
-					service.startActivity(intent); 
+					service.startActivity(intent);
 				}
 				
 			} else {
@@ -1172,7 +1208,7 @@ public class Protocol {
 		enqueue(bytes);
 
 	}
-
+	
 	public static int getQueueLength() {
 		return sendQueue.size();
 	}
