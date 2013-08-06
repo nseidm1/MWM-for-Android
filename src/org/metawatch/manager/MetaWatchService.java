@@ -211,7 +211,7 @@ public class MetaWatchService extends Service {
 		public static boolean readCalendarDuringMeeting = true;
 		public static int readCalendarMinDurationToMeetingEnd = 15;
 		public static boolean displayLocationInSmallCalendarWidget = false;
-		public static String locationRegexp = "Room:\\s*([0-9]+)\\s*([a-zA-Z]*)\\s";
+		public static String locationRegexp = "Room:\\s*([0-9]+)\\s*([a-zA-Z]*)-*([a-zA-Z]*)";
 		public static boolean eventDateInCalendarWidget = false;
 		public static boolean displayWidgetRowSeparator = false;
 		public static boolean overlayWeatherText = false;

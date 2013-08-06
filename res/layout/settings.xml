@@ -528,7 +528,7 @@
         android:key="LocationRegexp"
         android:summary="@string/settings_Location_regexp_desc"
         android:inputType="text"
-        android:defaultValue="Room:\\s*([0-9]+)\\s*([a-zA-Z]*)\\s"
+        android:defaultValue="Room:\\s*([0-9]+)\\s*([a-zA-Z]*)-*([a-zA-Z]*)"
         />
 			<CheckBoxPreference
 				android:title="@string/settings_Event_date_in_calendar_widget"
@@ -573,6 +573,17 @@
 			android:summary="@string/settings_Inverse_Media_Player_Buttons_desc"
 			android:defaultValue="false"
 			/>
+		
+    <ListPreference 
+      android:entries="@array/settings_calendar_view_names" 
+      android:entryValues="@array/settings_calendar_view_values" 
+      android:dialogTitle="@string/settings_default_calendar_view" 
+      android:key="DefaultCalendarView" 
+      android:title="@string/settings_default_calendar_view" 
+      android:negativeButtonText="@string/settings_CancelButton" 
+      android:enabled="true" 
+      android:defaultValue="0"
+      />  
 		
 		<PreferenceCategory
 		    android:title="@string/settings_active_apps"
