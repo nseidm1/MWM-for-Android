@@ -257,7 +257,8 @@ public class IntentReceiver extends BroadcastReceiver {
 		    Log.d(MetaWatchStatus.TAG, "IntentReceiver.onReceive(): Received time set intent.");
 
 		/* The time has changed, so trigger a time update */
-		Protocol.getInstance(context).getRealTimeClock();
+		/* DRM Changed from getRealTimeClock(); */
+		Protocol.getInstance(context).setRealTimeClock(context);
 		return;
 	    } else if (action.equals("android.intent.action.TIMEZONE_CHANGED")) {
 
@@ -267,7 +268,8 @@ public class IntentReceiver extends BroadcastReceiver {
 		/*
 		 * If we're in a new time zone, then the time has probably changed. Notify the watch.
 		 */
-		Protocol.getInstance(context).getRealTimeClock();
+		/* DRM Changed from getRealTimeClock(); */
+		Protocol.getInstance(context).setRealTimeClock(context);
 
 		/*
 		 * Check that the timezone has actually changed, so that we don't spam the user with notifications.

@@ -645,7 +645,8 @@ public class MetaWatchService extends Service {
 		    
 		}
 
-		Protocol.getInstance(MetaWatchService.this).getRealTimeClock();
+		/* DRM Changed from getRealTimeClock(); */
+		Protocol.getInstance(MetaWatchService.this).setRealTimeClock(MetaWatchService.this);
 
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MetaWatchService.this);
 
