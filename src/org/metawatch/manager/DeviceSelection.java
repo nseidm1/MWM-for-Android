@@ -125,15 +125,6 @@ public class DeviceSelection extends SherlockFragmentActivity {
 	SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 	boolean showFakeWatches = sharedPreferences.getBoolean("ShowFakeWatches", false);
 
-	// No point in discovering if it's switched off
-	if (!showFakeWatches) {
-	    BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
-	    if ((defaultAdapter == null) || (!BluetoothAdapter.getDefaultAdapter().isEnabled())) {
-		finish();
-		return;
-	    }
-	}
-
 	setContentView(R.layout.device_selection);
 	listView = (ListView) findViewById(android.R.id.list);
 
@@ -176,17 +167,16 @@ public class DeviceSelection extends SherlockFragmentActivity {
 
 	if (bluetoothAdapter == null)
 	    bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-	if (bluetoothAdapter == null && !showFakeWatches) {
-	    sendToast("Bluetooth not supported");
-	    return;
-	}
 
-	if (bluetoothAdapter != null) {
-	    Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
-	    if (pairedDevices.size() > 0) {
-		for (BluetoothDevice device : pairedDevices) {
-		    addToList(device.getAddress(), device.getName());
-		}
+	try {
+	    BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
+	    defaultAdapter.enable();
+	} catch(Exception e){e.printStackTrace();}
+	
+	Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
+	if (pairedDevices.size() > 0) {
+	    for (BluetoothDevice device : pairedDevices) {
+		addToList(device.getAddress(), device.getName());
 	    }
 	}
 
@@ -194,8 +184,11 @@ public class DeviceSelection extends SherlockFragmentActivity {
 	    addToList("DIGITAL", "Fake Digital Watch (Use for debugging digital functionality within MWM)");
 	    addToList("ANALOG", "Fake Analog Watch (Use for debugging analog functionality within MWM)");
 	}
+	
+	ProgressBar progress = (ProgressBar) findViewById(R.id.progressScanning);
+	progress.setVisibility(ProgressBar.GONE);
 
-	if (bluetoothAdapter != null)
+	if ( bluetoothAdapter.isEnabled())
 	    startDiscovery();
 
 	processActionBar();

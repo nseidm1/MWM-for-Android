@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.metawatch.manager"
-      android:versionCode="76"
-      android:installLocation="internalOnly" android:versionName="1.0.0.197">
+      android:versionCode="77"
+      android:installLocation="internalOnly" android:versionName="1.0.0.198">
       
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="17"/>
     <supports-screens android:resizeable="true" android:normalScreens="true" android:anyDensity="true" 
