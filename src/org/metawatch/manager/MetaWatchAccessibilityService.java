@@ -1,20 +1,30 @@
 package org.metawatch.manager;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.lang.reflect.Field;
 
 import org.metawatch.manager.MetaWatchService.Preferences;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
+import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.SparseArray;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
+import android.widget.RemoteViews;
 
 public class MetaWatchAccessibilityService extends AccessibilityService {
 
@@ -64,7 +74,7 @@ public class MetaWatchAccessibilityService extends AccessibilityService {
 					"MetaWatchAccessibilityService.onAccessibilityEvent(): null package or class name");
 			return;
 		}
-				
+			
 		if (eventType == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED) {
 			if (Preferences.logging) Log.d(MetaWatch.TAG,
 					"MetaWatchAccessibilityService.onAccessibilityEvent(): Received event, packageName = '"
@@ -83,15 +93,70 @@ public class MetaWatchAccessibilityService extends AccessibilityService {
 							+ notification.tickerText + "' flags = "
 							+ notification.flags + " ("
 							+ Integer.toBinaryString(notification.flags) + ")");
-	
-			if (notification.tickerText == null
-					|| notification.tickerText.toString().trim().length() == 0) {
+				
+			// Analyze the content view
+		    RemoteViews views = notification.contentView;
+		    @SuppressWarnings("rawtypes") Class secretClass = views.getClass();
+		    SparseArray<String> notificationContentTexts = new SparseArray<String>();
+		    try {
+		        Field[] outerFields = secretClass.getDeclaredFields();
+		        for (int i = 0; i < outerFields.length; i++) {
+		            if (!outerFields[i].getName().equals("mActions")) continue;
+		            outerFields[i].setAccessible(true);
+		            @SuppressWarnings("unchecked")ArrayList<Object> actions = (ArrayList<Object>) outerFields[i].get(views);
+		            for (Object action : actions) {
+		                Field innerFields[] = action.getClass().getDeclaredFields();
+
+		                Object value = null;
+		                Integer type = null;
+		                Integer viewId = null;
+		                for (Field field : innerFields) {
+		                    field.setAccessible(true);
+		                    if (field.getName().equals("value")) {
+		                        value = field.get(action);
+		                    } else if (field.getName().equals("type")) {
+		                        type = field.getInt(action);
+		                    } else if (field.getName().equals("viewId")) {
+		                        viewId = field.getInt(action);
+		                    }
+		                }
+
+		                if ((type!=null) && (viewId!=null) && (value!=null) && (type == 9 || type == 10)) {
+		    				if (Preferences.logging) Log.d(MetaWatch.TAG,
+		    						"MetaWatchAccessibilityService.onAccessibilityEvent(): Text in notification content => viewID=" + viewId.toString() + ", value=" + value.toString() + ".");
+		                	notificationContentTexts.put(viewId, value.toString());
+		                }
+		            }
+		        }
+		    } catch (Exception e) {
+		    	if (Preferences.logging) e.printStackTrace();
+		    }
+			
+			// If ticker text is empty, create it from the notification contents
+			String tickerText = "";
+			if ((notification.tickerText == null)||(notification.tickerText.toString().trim().length()==0)) {
+				if (tickerText.equals("")) {
+					if (notificationContentTexts.indexOfKey(16908310)>=0) 
+						tickerText = notificationContentTexts.get(16908310);
+					if (notificationContentTexts.indexOfKey(16909082)>=0) {
+						if (!tickerText.equals(""))
+							tickerText += "\n";
+						tickerText += notificationContentTexts.get(16909082);
+					}
+					if (notificationContentTexts.indexOfKey(16908358)>=0) {
+						if (!tickerText.equals(""))
+							tickerText += "\n";
+						tickerText += notificationContentTexts.get(16908358);
+					}
+				}
+			} else
+				tickerText = notification.tickerText.toString();			
+
+			if (tickerText.toString().trim().length() == 0) {
 				if (Preferences.logging) Log.d(MetaWatch.TAG,
 						"MetaWatchAccessibilityService.onAccessibilityEvent(): Empty text, ignoring.");
 				return;
 			}
-			
-			String tickerText = notification.tickerText.toString();
 			
 			if (lastNotificationPackage.equals(packageName) && lastNotificationText.equals(tickerText) &&
 					lastNotificationWhen == notification.when) {
