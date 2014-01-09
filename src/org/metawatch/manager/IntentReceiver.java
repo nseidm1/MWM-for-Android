@@ -319,6 +319,7 @@ public class IntentReceiver extends BroadcastReceiver {
 			}
 			
 			else if (intent.getAction().equals("com.android.music.metachanged")
+					|| intent.getAction().equals("com.android.music.playstatechanged")
 					|| intent.getAction().equals(
 							"mobi.beyondpod.action.PLAYBACK_STATUS")
 					|| intent.getAction().equals("com.htc.music.metachanged")
