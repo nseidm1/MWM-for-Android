@@ -958,6 +958,30 @@ public class MetaWatchService extends Service {
 		}
 
 	}
+	
+	void restoreState() {
+		// Init currently shown page
+		switch (watchState) {
+			case WatchStates.CALL:
+				if (Call.isRinging) 
+					Call.startRinging(context, Call.phoneNumber);
+				else 
+					Call.exitCall(context);
+				break;
+			case WatchStates.NOTIFICATION:
+				Notification.replay(context);
+				break;
+			case WatchStates.APPLICATION:
+				Application.toApp(context);
+				Application.updateAppMode(this);
+				break;
+			case WatchStates.IDLE:
+			case WatchStates.OFF:
+				Idle.toIdle(context);
+				Idle.updateIdle(this, true);
+				break;
+		}
+	}
 
 	void readFromDevice() {
 
@@ -1040,8 +1064,8 @@ public class MetaWatchService extends Service {
 					if (Preferences.logging) Log.d(MetaWatch.TAG,
 							"MetaWatchService.readFromDevice(): mode timeout.");
 					// The watch switches back to idle mode (showing the initial page) after 10 minutes
-					// Activate the last used idle page in this case
-					Idle.toIdle(context);
+					// Restore the state in this case
+					restoreState();
 				}
 			}
 
@@ -1102,26 +1126,7 @@ public class MetaWatchService extends Service {
 				}
 
 				// Init currently shown page
-				switch (watchState) {
-					case WatchStates.CALL:
-						if (Call.isRinging) 
-							Call.startRinging(context, Call.phoneNumber);
-						else 
-							Call.exitCall(context);
-						break;
-					case WatchStates.NOTIFICATION:
-						Notification.replay(context);
-						break;
-					case WatchStates.APPLICATION:
-						Application.toApp(context);
-						Application.updateAppMode(this);
-						break;
-					case WatchStates.IDLE:
-					case WatchStates.OFF:
-						Idle.toIdle(context);
-						Idle.updateIdle(this, true);
-						break;
-				}
+				restoreState();
 			
 				Protocol.setTimeDateFormat(this);
 				Protocol.getRealTimeClock();
