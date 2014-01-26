@@ -49,8 +49,63 @@ public class MetaWatchAccessibilityService extends AccessibilityService {
 
 	private static String lastNotificationPackage = "";
 	private static String lastNotificationText = "";
+	private static String lastGoogleNowNotificationText = "";
 	private static long lastNotificationWhen = 0;
 	
+	private class ActionContent {
+		Integer viewId = null;
+		Integer type = null;
+		Object value = null;
+	}
+
+	private void parseObjectFields(Object object, Class<?> currentClass, ActionContent actionContent) {
+	    Field innerFields[] = currentClass.getDeclaredFields();
+	    for (Field field : innerFields) {
+	        field.setAccessible(true);
+		    try {
+		        if (field.getName().equals("value")) {
+		            actionContent.value = field.get(object);
+		        } else if (field.getName().equals("type")) {
+		            actionContent.type = field.getInt(object);
+		        } else if (field.getName().equals("viewId")) {
+		            actionContent.viewId = field.getInt(object);
+		        }
+		    }
+		    catch (Exception e) {
+		    	if (Preferences.logging) e.printStackTrace();
+		    }
+	    }
+	    currentClass=currentClass.getSuperclass();
+	    if (!currentClass.getName().equals("java.lang.Object")) {
+	    	parseObjectFields(object, currentClass, actionContent);
+	    }
+	}
+
+	private SparseArray<String> parseRemoteView(RemoteViews views) {
+	    @SuppressWarnings("rawtypes") Class secretClass = views.getClass();
+	    SparseArray<String> texts = new SparseArray<String>();
+	    try {
+	        Field[] outerFields = secretClass.getDeclaredFields();
+	        for (int i = 0; i < outerFields.length; i++) {
+	            if (!outerFields[i].getName().equals("mActions")) continue;
+	            outerFields[i].setAccessible(true);
+	            @SuppressWarnings("unchecked")ArrayList<Object> actions = (ArrayList<Object>) outerFields[i].get(views);
+	            for (Object action : actions) {
+	            	ActionContent actionContent = new ActionContent();
+	            	parseObjectFields(action,action.getClass(),actionContent);
+	                if ((actionContent.type!=null) && (actionContent.viewId!=null) && (actionContent.value!=null) && (actionContent.type == 9 || actionContent.type == 10)) {
+	    				if (Preferences.logging) Log.d(MetaWatch.TAG,
+	    						"MetaWatchAccessibilityService.onAccessibilityEvent(): Text in notification content => viewID=" + actionContent.viewId.toString() + ", value=" + actionContent.value.toString() + ".");
+	                	texts.put(actionContent.viewId, actionContent.value.toString());
+	                }
+	            }
+	        }
+	    } catch (Exception e) {
+	    	if (Preferences.logging) e.printStackTrace();
+	    }
+	    return texts;
+	}
+
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
 
@@ -93,45 +148,26 @@ public class MetaWatchAccessibilityService extends AccessibilityService {
 							+ notification.tickerText + "' flags = "
 							+ notification.flags + " ("
 							+ Integer.toBinaryString(notification.flags) + ")");
-				
-			// Analyze the content view
-		    RemoteViews views = notification.contentView;
-		    @SuppressWarnings("rawtypes") Class secretClass = views.getClass();
-		    SparseArray<String> notificationContentTexts = new SparseArray<String>();
-		    try {
-		        Field[] outerFields = secretClass.getDeclaredFields();
-		        for (int i = 0; i < outerFields.length; i++) {
-		            if (!outerFields[i].getName().equals("mActions")) continue;
-		            outerFields[i].setAccessible(true);
-		            @SuppressWarnings("unchecked")ArrayList<Object> actions = (ArrayList<Object>) outerFields[i].get(views);
-		            for (Object action : actions) {
-		                Field innerFields[] = action.getClass().getDeclaredFields();
 
-		                Object value = null;
-		                Integer type = null;
-		                Integer viewId = null;
-		                for (Field field : innerFields) {
-		                    field.setAccessible(true);
-		                    if (field.getName().equals("value")) {
-		                        value = field.get(action);
-		                    } else if (field.getName().equals("type")) {
-		                        type = field.getInt(action);
-		                    } else if (field.getName().equals("viewId")) {
-		                        viewId = field.getInt(action);
-		                    }
-		                }
-
-		                if ((type!=null) && (viewId!=null) && (value!=null) && (type == 9 || type == 10)) {
-		    				if (Preferences.logging) Log.d(MetaWatch.TAG,
-		    						"MetaWatchAccessibilityService.onAccessibilityEvent(): Text in notification content => viewID=" + viewId.toString() + ", value=" + value.toString() + ".");
-		                	notificationContentTexts.put(viewId, value.toString());
-		                }
-		            }
-		        }
-		    } catch (Exception e) {
-		    	if (Preferences.logging) e.printStackTrace();
+		    if (packageName.contains("com.google.android.keep")) {
+		    	Log.d(MetaWatch.TAG,"keep notification received");
 		    }
 			
+			// Analyze the content views
+		    SparseArray<String> notificationContentTexts = parseRemoteView(notification.contentView);
+	    	RemoteViews bigContentView = null;
+		    try {
+		    	@SuppressWarnings("rawtypes") Class secretClass = notification.getClass();
+		    	Field f = secretClass.getDeclaredField("bigContentView");
+		    	bigContentView = (RemoteViews)f.get(notification);
+		    } 
+		    catch (Exception e) {
+		    	// bigContentView not supported, so keep the original ticker text
+		    }
+		    SparseArray<String> notificationBigContentTexts = null;
+		    if (bigContentView!=null)
+		    	notificationBigContentTexts=parseRemoteView(bigContentView);
+		    
 			// If ticker text is empty, create it from the notification contents
 			String tickerText = "";
 			if ((notification.tickerText == null)||(notification.tickerText.toString().trim().length()==0)) {
@@ -148,6 +184,11 @@ public class MetaWatchAccessibilityService extends AccessibilityService {
 							tickerText += "\n";
 						tickerText += notificationContentTexts.get(16908358);
 					}
+					if (notificationContentTexts.indexOfKey(16909337)>=0) {
+						if (!tickerText.equals(""))
+							tickerText += "\n";
+						tickerText += notificationContentTexts.get(16909337);
+					}
 				}
 			} else
 				tickerText = notification.tickerText.toString();			
@@ -156,6 +197,17 @@ public class MetaWatchAccessibilityService extends AccessibilityService {
 				if (Preferences.logging) Log.d(MetaWatch.TAG,
 						"MetaWatchAccessibilityService.onAccessibilityEvent(): Empty text, ignoring.");
 				return;
+			}
+			
+			// Some apps periodically issue notification with the same text but different time
+			// Handle those here
+			if (packageName.equals("com.google.android.googlequicksearchbox")) {
+				if (lastGoogleNowNotificationText.equals(tickerText)) {
+					if (Preferences.logging) Log.d(MetaWatch.TAG,
+							"MetaWatchAccessibilityService.onAccessibilityEvent(): No new google now text, ignoring.");
+					return;
+				}
+				lastGoogleNowNotificationText=tickerText;
 			}
 			
 			if (lastNotificationPackage.equals(packageName) && lastNotificationText.equals(tickerText) &&
@@ -193,7 +245,6 @@ public class MetaWatchAccessibilityService extends AccessibilityService {
 				}
 			}
 			
-			
 			/* Deezer or Spotify track notification */
 			if (packageName.equals("deezer.android.app") || packageName.equals("com.spotify.mobile.android.ui")) {
 				
@@ -213,7 +264,33 @@ public class MetaWatchAccessibilityService extends AccessibilityService {
 				return;
 			}
 			
-			if ((notification.flags & android.app.Notification.FLAG_ONGOING_EVENT) > 0) {
+			/* Special handling for whatsapp */
+			if ((packageName.contains("com.whatsapp"))&&(sharedPreferences.getBoolean("notifySMS", true))) {
+			    if (notificationBigContentTexts != null) {
+				    String from = notificationBigContentTexts.valueAt(0);
+				    String message = "WhatsApp: " + notificationBigContentTexts.valueAt(1) + "\n";
+				    for (int i=2;i<notificationBigContentTexts.size();i++) {
+				    	message = message + notificationBigContentTexts.valueAt(i) + "\n";
+				    }
+				    NotificationBuilder.createSMS(this, from, message);
+				    return;
+			    }
+		    }
+
+			/* Special handling for hangout */
+		    if ((packageName.contains("com.google.android.talk"))&&(sharedPreferences.getBoolean("notifySMS", true))) {
+			    if (notificationBigContentTexts != null) {
+				    String from = notificationBigContentTexts.valueAt(0);
+				    String message = "Hangouts:\n";
+				    for (int i=1;i<notificationBigContentTexts.size();i++) {
+				    	message = message + notificationBigContentTexts.valueAt(i) + "\n";
+				    }
+				    NotificationBuilder.createSMS(this, from, message);
+				    return;
+			    }
+		    }
+
+		    if ((notification.flags & android.app.Notification.FLAG_ONGOING_EVENT) > 0) {
 				/* Ignore updates to ongoing events. */
 				if (Preferences.logging) Log.d(MetaWatch.TAG,
 						"MetaWatchAccessibilityService.onAccessibilityEvent(): Ongoing event, ignoring.");
@@ -234,6 +311,7 @@ public class MetaWatchAccessibilityService extends AccessibilityService {
 					return;
 				}
 	
+				/* Get details about package */
 				Bitmap icon = null;
 				PackageManager pm = getPackageManager();
 				PackageInfo packageInfo = null;
@@ -250,7 +328,7 @@ public class MetaWatchAccessibilityService extends AccessibilityService {
 				}
 				
 				int buzzes = sharedPreferences.getInt("appVibrate_" + packageName, -1);
-	
+					
 				if (appName == null) {
 					if (Preferences.logging) Log.d(MetaWatch.TAG,
 							"onAccessibilityEvent(): Unknown app -- sending notification: '"
