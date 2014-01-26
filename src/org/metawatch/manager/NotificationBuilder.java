@@ -160,16 +160,15 @@ public class NotificationBuilder {
 	
 	public static void createGmailBlank(Context context, String recipient, int count) {
 		VibratePattern vibratePattern = createVibratePatternFromPreference(context, "settingsGmailNumberBuzzes");
-		String messages = count + " new " + (count == 1 ? "message" : "messages");
 		Bitmap icon = Utils.getBitmap(context, "gmail.bmp");
 		String description = "Gmail: unread "+count;
 		if (MetaWatchService.watchType == WatchType.DIGITAL) {
-			Bitmap bitmap = smartLines(context, icon, "Gmail", new String[] {messages, recipient});	
+			Bitmap bitmap = smartLines(context, icon, "Gmail", new String[] {recipient});	
 			Notification.addBitmapNotification(context, bitmap, vibratePattern, Notification.getDefaultNotificationTimeout(context), description);
 		} else {
 			byte[] scroll = new byte[800];
 			int len = Protocol.createOled2linesLong(context, recipient, scroll);
-			Notification.addOledNotification(context, Protocol.createOled1line(context, icon, " Gmail"), Protocol.createOled2lines(context, messages, recipient), scroll, len, vibratePattern, description);			
+			Notification.addOledNotification(context, Protocol.createOled1line(context, icon, " Gmail"), Protocol.createOled1line(context, null, recipient), scroll, len, vibratePattern, description);			
 		}
 	}
 	
