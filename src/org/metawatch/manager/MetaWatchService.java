@@ -1065,7 +1065,19 @@ public class MetaWatchService extends Service {
 							"MetaWatchService.readFromDevice(): mode timeout.");
 					// The watch switches back to idle mode (showing the initial page) after 10 minutes
 					// Restore the state in this case
-					restoreState();
+					switch (watchState) {
+						case WatchStates.CALL:
+						case WatchStates.NOTIFICATION:
+							Protocol.updateLcdDisplay(MetaWatchService.WatchBuffers.NOTIFICATION);
+							break;
+						case WatchStates.APPLICATION:
+							Protocol.updateLcdDisplay(MetaWatchService.WatchBuffers.APPLICATION);
+							break;
+						case WatchStates.IDLE:
+						case WatchStates.OFF:
+							Protocol.updateLcdDisplay(Idle.getScreenMode(MetaWatchService.watchType));
+							break;
+					}
 				}
 			}
 

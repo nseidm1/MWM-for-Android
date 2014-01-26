@@ -457,7 +457,7 @@ public class Idle {
 	  return canvas;
 	}
 	
-	private static int getScreenMode(int watchType) {
+	public static int getScreenMode(int watchType) {
 		int mode = MetaWatchService.WatchBuffers.IDLE;
 		if(idlePages != null && idlePages.size()>currentPage) {
 			mode = idlePages.get(currentPage).screenMode(watchType);
