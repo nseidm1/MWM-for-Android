@@ -100,13 +100,6 @@ public class MetaWatchAccessibilityService extends AccessibilityService {
 							&& (actionContent.viewId != null)
 							&& (actionContent.value != null)
 							&& (actionContent.type == 9 || actionContent.type == 10)) {
-						if (Preferences.logging)
-							Log.d(MetaWatch.TAG,
-									"MetaWatchAccessibilityService.onAccessibilityEvent(): Text in notification content => viewID="
-											+ actionContent.viewId.toString()
-											+ ", value="
-											+ actionContent.value.toString()
-											+ ".");
 						texts.put(actionContent.viewId,
 								actionContent.value.toString());
 					}

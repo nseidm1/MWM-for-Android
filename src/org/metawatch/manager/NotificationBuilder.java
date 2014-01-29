@@ -68,6 +68,8 @@ public class NotificationBuilder {
 	}
 
 	public static void createSMS(Context context, String number, String text) {
+		if (MetaWatchService.watchType==WatchType.UNKNOWN)
+			return;
 		String name = Utils.getContactNameFromNumber(context, number);
 		VibratePattern vibratePattern = createVibratePatternFromPreference(context, "settingsSMSNumberBuzzes");
 		Bitmap icon = Utils.getBitmap(context, "message.bmp");
@@ -90,6 +92,8 @@ public class NotificationBuilder {
 	}
 
 	public static void createMMS(Context context, String number) {
+		if (MetaWatchService.watchType==WatchType.UNKNOWN)
+			return;
 		String name = Utils.getContactNameFromNumber(context, number);
 		VibratePattern vibratePattern = createVibratePatternFromPreference(context, "settingsSMSNumberBuzzes");
 		Bitmap icon = Utils.getBitmap(context, "message.bmp");
@@ -110,6 +114,8 @@ public class NotificationBuilder {
 	}
 	
 	public static void createSmart(Context context, String title, String text, Bitmap icon, boolean sticky, VibratePattern vibratePattern) {
+		if (MetaWatchService.watchType==WatchType.UNKNOWN)
+			return;
 		if (icon == null) {
 			icon = Utils.getBitmap(context, "notify.bmp");
 		}
@@ -130,6 +136,8 @@ public class NotificationBuilder {
 	}
 	
 	public static void createK9(Context context, String sender, String subject, String folder) {	
+		if (MetaWatchService.watchType==WatchType.UNKNOWN)
+			return;
 		VibratePattern vibratePattern = createVibratePatternFromPreference(context, "settingsK9NumberBuzzes");	
 		Bitmap icon = Utils.getBitmap(context, "email.bmp");
 		String description = "K9: "+sender;
@@ -144,6 +152,8 @@ public class NotificationBuilder {
 	}
 	
 	public static void createGmail(Context context, String sender, String email, String subject, String snippet) {
+		if (MetaWatchService.watchType==WatchType.UNKNOWN)
+			return;
 		VibratePattern vibratePattern = createVibratePatternFromPreference(context, "settingsGmailNumberBuzzes");	
 		Bitmap icon = Utils.getBitmap(context, "gmail.bmp");
 		String description = "Gmail: "+sender;
@@ -159,6 +169,8 @@ public class NotificationBuilder {
 	}
 	
 	public static void createGmailBlank(Context context, String recipient, int count) {
+		if (MetaWatchService.watchType==WatchType.UNKNOWN)
+			return;
 		VibratePattern vibratePattern = createVibratePatternFromPreference(context, "settingsGmailNumberBuzzes");
 		Bitmap icon = Utils.getBitmap(context, "gmail.bmp");
 		String description = "Gmail: unread "+count;
@@ -173,6 +185,8 @@ public class NotificationBuilder {
 	}
 	
 	public static void createTouchdownMail(Context context, String title, String ticker) {	
+		if (MetaWatchService.watchType==WatchType.UNKNOWN)
+			return;
 		VibratePattern vibratePattern = createVibratePatternFromPreference(context, "settingsTDNumberBuzzes");	
 		Bitmap icon = Utils.getBitmap(context, "email.bmp");
 		String description = "TouchDown: "+title;
@@ -187,6 +201,8 @@ public class NotificationBuilder {
 	}
 	
 	public static void createCalendar(Context context, String text) {
+		if (MetaWatchService.watchType==WatchType.UNKNOWN)
+			return;
 		VibratePattern vibratePattern = createVibratePatternFromPreference(context, "settingsCalendarNumberBuzzes");
 		Bitmap icon = Utils.getBitmap(context, "calendar.bmp");
 		String description = "Cal: "+text;
@@ -201,6 +217,8 @@ public class NotificationBuilder {
 	}
 	
 	public static void createAlarm(Context context) {
+		if (MetaWatchService.watchType==WatchType.UNKNOWN)
+			return;
 		VibratePattern vibratePattern = createVibratePatternFromPreference(context, "settingsAlarmNumberBuzzes");	
 	    final Calendar t = Calendar.getInstance();
 	    final String currentTime = DateFormat.getTimeFormat(context).format(t.getTime());
@@ -215,6 +233,8 @@ public class NotificationBuilder {
 	}
 	
 	public static void createMusic(Context context, String artist, String track, String album) {
+		if (MetaWatchService.watchType==WatchType.UNKNOWN)
+			return;
 		VibratePattern vibratePattern = createVibratePatternFromPreference(context, "settingsMusicNumberBuzzes");	
 		Bitmap icon = Utils.getBitmap(context, "play.bmp");
 		String description = "Music: "+track;
@@ -229,6 +249,8 @@ public class NotificationBuilder {
 	}
 	
 	public static void createTimezonechange(Context context) {
+		if (MetaWatchService.watchType==WatchType.UNKNOWN)
+			return;
 		VibratePattern vibratePattern = createVibratePatternFromPreference(context, "settingsTimezoneNumberBuzzes");	
 		TimeZone tz = TimeZone.getDefault();
 		Bitmap icon = Utils.getBitmap(context, "timezone.bmp");
@@ -245,6 +267,8 @@ public class NotificationBuilder {
 	}
 	
 	public static void createOtherNotification(Context context, Bitmap icon, String appName, String notificationText, int buzzes) {
+		if (MetaWatchService.watchType==WatchType.UNKNOWN)
+			return;
 		VibratePattern vibratePattern;
 		if (buzzes != -1) {
 			vibratePattern = createVibratePatternFromBuzzes(buzzes);
@@ -266,6 +290,8 @@ public class NotificationBuilder {
 	}
 	
 	public static void createWinamp(Context context, String artist, String track, String album) {
+		if (MetaWatchService.watchType==WatchType.UNKNOWN)
+			return;
 		VibratePattern vibratePattern = createVibratePatternFromPreference(context, "settingsMusicNumberBuzzes");	
 		Bitmap icon = Utils.getBitmap(context, "winamp.bmp");
 		String description = "Winamp: "+track;
@@ -280,6 +306,8 @@ public class NotificationBuilder {
 	}
 
 	public static void createBatterylow(Context context) {
+		if (MetaWatchService.watchType==WatchType.UNKNOWN)
+			return;
 		VibratePattern vibratePattern = createVibratePatternFromPreference(
 				context, "settingsBatteryNumberBuzzes");
 		StringBuilder builder = new StringBuilder();
@@ -301,6 +329,8 @@ public class NotificationBuilder {
 	}	
 	
 	public static void createNMA(Context context, String appName, String event, String desc, int prio, String url) {
+		if (MetaWatchService.watchType==WatchType.UNKNOWN)
+			return;
 		VibratePattern vibratePattern = createVibratePatternFromPreference(context, "settingsNMANumberBuzzes");		
 		Bitmap icon = Utils.getBitmap(context, "notifymyandroid.bmp");
 		if (MetaWatchService.watchType == WatchType.DIGITAL) {
@@ -314,6 +344,8 @@ public class NotificationBuilder {
 	}
 
 	public static void createNewVoicemail(Context context) {
+		if (MetaWatchService.watchType==WatchType.UNKNOWN)
+			return;
 		VibratePattern vibratePattern = createVibratePatternFromPreference(
 				context, "settingsVoicemailNumberBuzzes");
 		String description = "New Voicemail";
