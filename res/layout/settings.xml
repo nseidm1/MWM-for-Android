@@ -491,7 +491,7 @@
 				/>
 		    
 		</PreferenceScreen>
-
+        	    
 		<PreferenceScreen
 		    android:title="@string/settings_calendar_widgets"
 		    >	    
@@ -538,7 +538,32 @@
 				/>
 		</PreferenceScreen>
 			    
-	</PreferenceScreen>
+    <PreferenceScreen
+      android:title="@string/settings_withings_widgets"
+      >
+
+      <EditTextPreference
+        android:title="@string/settings_Withings_API_key"
+        android:key="WithingsAPIKey"
+        android:summary="@string/settings_Withings_API_key_desc"
+        android:defaultValue=""
+        />
+      <EditTextPreference
+        android:title="@string/settings_Withings_API_secret"
+        android:key="WithingsAPISecret"
+        android:summary="@string/settings_Withings_API_secret_desc"
+        android:defaultValue=""
+        />
+      <CheckBoxPreference
+        android:title="@string/settings_Authenticate_withings_account"
+        android:key="WithingsAccountAuthenticated"
+        android:summary="@string/settings_Authenticate_withings_account_desc"
+        android:defaultValue="false"
+        />
+        
+    </PreferenceScreen>
+		
+  </PreferenceScreen>
 	
 	<PreferenceScreen
 	    android:title="@string/settings_watch_apps"

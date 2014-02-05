@@ -84,7 +84,15 @@
     
     <string name="settings_Overlay_weather_text">Overlay text in weather widget</string>
     <string name="settings_Overlay_weather_text_desc">Draws the text (condition and location) over the weather icon</string>
-
+    
+    <string name="settings_withings_widgets">Withings widget</string>
+    <string name="settings_Withings_API_key">Withings API key</string>
+    <string name="settings_Withings_API_key_desc">The key to use for accessing the Body Metrics Service API.</string>
+    <string name="settings_Withings_API_secret">Withings API secret</string>
+    <string name="settings_Withings_API_secret_desc">The secret to use for accessing the Body Metrics Service API.</string>
+    <string name="settings_Authenticate_withings_account">User authenticated</string>
+    <string name="settings_Authenticate_withings_account_desc">Asks Withings to allow access to the body metrics of a user.</string>
+    
     <string name="settings_phoneCalls">Phonecalls</string>
         
     <string name="settings_call_actions">Show actions in call</string>

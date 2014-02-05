@@ -53,6 +53,12 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"></action>
+                <category android:name="android.intent.category.DEFAULT"></category>
+                <category android:name="android.intent.category.BROWSABLE"></category>
+                <data android:scheme="metawatch"></data>
+            </intent-filter>              
         </activity>
 		<activity
 			android:label="Send to Watch"
@@ -184,7 +190,7 @@
 			</intent-filter>
 		</service>      
 		<activity android:name="org.metawatch.manager.MetaWatchStatus" 
-                  android:launchMode="standard">
+                  android:launchMode="standard">		
         </activity>  
         <activity android:name="org.metawatch.manager.Settings" 
         		  android:launchMode="standard">

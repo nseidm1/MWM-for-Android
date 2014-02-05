@@ -223,6 +223,9 @@ public class MetaWatchService extends Service {
 		public static boolean eventDateInCalendarWidget = false;
 		public static boolean displayWidgetRowSeparator = false;
 		public static boolean overlayWeatherText = false;
+		public static boolean withingsAccountAuthenticated = false;
+		public static String withingsAPIKey = "";
+		public static String withingsAPISecret = "";
 		public static boolean clockOnEveryPage = false;
 		public static boolean appBufferForClocklessPages = true;
 		public static boolean showNotificationQueue = false;
@@ -385,6 +388,12 @@ public class MetaWatchService extends Service {
 				Preferences.displayWidgetRowSeparator);
 		Preferences.overlayWeatherText = sharedPreferences.getBoolean(
 				"OverlayWeatherText", Preferences.overlayWeatherText);
+		Preferences.withingsAPIKey = sharedPreferences.getString(
+				"WithingsAPIKey", Preferences.withingsAPIKey);
+		Preferences.withingsAPISecret = sharedPreferences.getString(
+				"WithingsAPISecret", Preferences.withingsAPISecret);
+		Preferences.withingsAccountAuthenticated = sharedPreferences.getBoolean(
+				"WithingsAccountAuthenticated", Preferences.withingsAccountAuthenticated);
 		Preferences.clockOnEveryPage = sharedPreferences.getBoolean(
 				"ClockOnEveryPage", Preferences.clockOnEveryPage);
 		Preferences.appBufferForClocklessPages = sharedPreferences.getBoolean(
@@ -1112,14 +1121,25 @@ public class MetaWatchService extends Service {
 					case WatchStates.CALL:
 					case WatchStates.NOTIFICATION:
 						if (mode != MetaWatchService.WatchBuffers.NOTIFICATION) {
-							error = true;
-							Protocol.updateLcdDisplay(MetaWatchService.WatchBuffers.NOTIFICATION);
+							if (!Notification.isActive()) {
+								Log.d(MetaWatch.TAG, "MetaWatchService.readFromDevice(): forcing idle mode because app is still in notification mode without active notification.");
+								Notification.exitNotification(this);
+							} else {
+								error = true;
+								Protocol.updateLcdDisplay(MetaWatchService.WatchBuffers.NOTIFICATION);
+								if (Preferences.logging)
+									Log.d(MetaWatch.TAG,
+											"MetaWatchService.readFromDevice(): restoring mode because watch is not in notification mode");						
+							}
 						}
 						break;
 					case WatchStates.APPLICATION:
 						if (mode != MetaWatchService.WatchBuffers.APPLICATION) {
 							error = true;
 							Protocol.updateLcdDisplay(MetaWatchService.WatchBuffers.APPLICATION);
+							if (Preferences.logging)
+								Log.d(MetaWatch.TAG,
+										"MetaWatchService.readFromDevice(): restoring mode because watch is not in application mode");						
 						}
 						break;
 					case WatchStates.IDLE:
@@ -1129,6 +1149,9 @@ public class MetaWatchService extends Service {
 							error = true;
 							Protocol.updateLcdDisplay(Idle
 									.getScreenMode(MetaWatchService.watchType));
+							if (Preferences.logging)
+								Log.d(MetaWatch.TAG,
+										"MetaWatchService.readFromDevice(): restoring mode because watch is not in idle mode");						
 						}
 						break;
 					}
@@ -1159,6 +1182,12 @@ public class MetaWatchService extends Service {
 					switch (watchState) {
 					case WatchStates.CALL:
 					case WatchStates.NOTIFICATION:
+						/*if (!Notification.isActive()) {
+							Log.d(MetaWatch.TAG, "MetaWatchService.readFromDevice(): forcing idle mode because app is still in notification mode without active notification.");
+							Notification.exitNotification(this);
+						} else {
+							Protocol.updateLcdDisplay(MetaWatchService.WatchBuffers.NOTIFICATION);
+						}*/
 						Protocol.updateLcdDisplay(MetaWatchService.WatchBuffers.NOTIFICATION);
 						break;
 					case WatchStates.APPLICATION:

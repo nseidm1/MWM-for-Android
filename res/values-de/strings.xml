@@ -85,6 +85,14 @@
     <string name="settings_Overlay_weather_text">Text darf das Wetterwidget überlappen</string>
     <string name="settings_Overlay_weather_text_desc">Text (Aktuelles Wetter und Ortsinformation) darf das Wetterwidget überlappen</string>
 
+    <string name="settings_withings_widgets">Withings Widget</string>
+    <string name="settings_Withings_API_key">Withings API Schlüssel</string>
+    <string name="settings_Withings_API_key_desc">Der zu benutzende Applikationsschlüssel beim Zugriff auf die "Body Metrics Service API".</string>
+    <string name="settings_Withings_API_secret">Withings API Geheimnis</string>
+    <string name="settings_Withings_API_secret_desc">Das zu benutzende Applikationsgeheimnis beim Zugriff auf die "Body Metrics Service API".</string>
+    <string name="settings_Authenticate_withings_account">Benutzer angemeldet</string>
+    <string name="settings_Authenticate_withings_account_desc">Fragt Withings um Erlaubnis, das "Body Metrics Service API" zu benutzen.</string>
+    
     <string name="settings_phoneCalls">Anrufe</string>
         
     <string name="settings_call_actions">Aktionen während Anruf</string>

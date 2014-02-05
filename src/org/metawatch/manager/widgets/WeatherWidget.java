@@ -633,12 +633,7 @@ public class WeatherWidget implements InternalWidget {
 			paintLarge.setTextAlign(Paint.Align.RIGHT);
 			paintLargeOutline.setTextAlign(Paint.Align.RIGHT);
 			Utils.drawOutlinedText(Monitors.weatherData.temp, canvas, 43, 13, paintLarge, paintLargeOutline);
-			if (Monitors.weatherData.celsius) {
-				canvas.drawText("C", 43, 7, paintSmall);
-			}
-			else {
-				canvas.drawText("F", 43, 7, paintSmall);
-			}
+			canvas.drawText("O", 43, 7, paintSmall);
 			paintLarge.setTextAlign(Paint.Align.LEFT);
 						
 			if (Monitors.weatherData.forecast!=null && Monitors.weatherData.forecast.length>0) {
@@ -653,7 +648,7 @@ public class WeatherWidget implements InternalWidget {
 				paintSmall.setTextAlign(Paint.Align.LEFT);
 			}
 
-			Utils.drawOutlinedText((String) TextUtils.ellipsize(Monitors.weatherData.locationName, paintSmall, 48, TruncateAt.END), canvas, 0, 30, paintSmall, paintSmallOutline);
+			Utils.drawOutlinedText((String) TextUtils.ellipsize(Monitors.weatherData.locationName, paintSmall, 47, TruncateAt.END), canvas, 1, 30, paintSmall, paintSmallOutline);
 						
 		} else {
 			paintSmall.setTextAlign(Paint.Align.CENTER);
