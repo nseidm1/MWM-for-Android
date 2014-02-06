@@ -48,7 +48,7 @@ public class WithingsWidget implements InternalWidget {
 
 	public final static String id_0 = "withings_24_32";
 	final static String desc_0 = "Withings Body Metric (24x32)";
-
+	
 	private Context context = null;
 	private TextPaint paintSmall;
 	private TextPaint paintSmallNumerals;
@@ -173,7 +173,10 @@ public class WithingsWidget implements InternalWidget {
 		// Bitmap icon = Utils.getBitmap(context, iconFile);
 		String count = String.format(Locale.US,"%2.1f",weightValue);
 
-		widget.priority = 1;
+		if (weightValue!=0)
+			widget.priority = 1;
+		else
+			widget.priority = 0;
 		widget.bitmap = Bitmap.createBitmap(widget.width, widget.height,
 				Bitmap.Config.RGB_565);
 		Canvas canvas = new Canvas(widget.bitmap);
