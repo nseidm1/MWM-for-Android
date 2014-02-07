@@ -107,6 +107,10 @@ public class EnvironmentSensorWidget implements InternalWidget, SensorEventListe
 		    sensorManager.registerListener(this, relativeHumiditySensor, SensorManager.SENSOR_DELAY_UI);
 		} catch (Exception e) {
 		}
+		
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+		prevPressure = sharedPreferences.getFloat("EnvironmentSensorPrevPressure", 0);
+		if (prevPressure==0) prevPressure=null;
 
 	}
 
@@ -211,6 +215,9 @@ public class EnvironmentSensorWidget implements InternalWidget, SensorEventListe
 						pressureDirection=0;
 					}
 					prevPressure=pressure;
+					SharedPreferences.Editor sharedPreferencesEditor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+					sharedPreferencesEditor.putFloat("EnvironmentSensorPrevPressure", prevPressure);
+					sharedPreferencesEditor.commit();
 					nextPressureDirectionUpdate=System.currentTimeMillis()+60*60*1000;
 				}
 			}

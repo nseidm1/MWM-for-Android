@@ -96,6 +96,10 @@ public class WithingsWidget implements InternalWidget {
 							}
 						}
 						Idle.updateIdle(context, true);
+						SharedPreferences.Editor sharedPreferencesEditor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+						sharedPreferencesEditor.putFloat("WithingsWeightValue", (float)weightValue);
+						sharedPreferencesEditor.putFloat("WithingsFatRatioValue", (float)fatRatioValue);
+						sharedPreferencesEditor.commit();
 					} catch (Exception e) {
 						if (Preferences.logging)
 							Log.d(MetaWatch.TAG,
@@ -138,6 +142,8 @@ public class WithingsWidget implements InternalWidget {
 		accessTokenSecret = sharedPreferences.getString(
 				"WithingsAccessTokenSecret", null);
 		userID = sharedPreferences.getString("WithingsUserID", null);
+		weightValue=sharedPreferences.getFloat("WithingsWeightValue", 0);
+		fatRatioValue=sharedPreferences.getFloat("WithingsFatRatioValue", 0);
 
 		// Keep updating values
 		updateThread.start();
