@@ -192,8 +192,10 @@ public class CalendarWidget implements InternalWidget {
 			Matcher m = p.matcher(location);
 			if (m.find()) {
 				location = "";
-				for (int i=1;i<=m.groupCount();i++)
-					location = location + m.group(i);
+				for (int i=1;i<=m.groupCount();i++) {
+					if (m.group(i)!=null)
+						location = location + m.group(i);					
+				}
 			}
 			
 			// Only display it if location string is below 3 letters
