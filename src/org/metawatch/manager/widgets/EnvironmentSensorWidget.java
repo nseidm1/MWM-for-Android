@@ -71,6 +71,7 @@ public class EnvironmentSensorWidget implements InternalWidget, SensorEventListe
 	private Sensor relativeHumiditySensor;
 	private long nextUpdate=0;
 	private long nextPressureDirectionUpdate=0;
+	
 
 	public void init(Context context, ArrayList<CharSequence> widgetIds) {
 		
@@ -211,8 +212,6 @@ public class EnvironmentSensorWidget implements InternalWidget, SensorEventListe
 						} else {
 							pressureDirection=+1;						
 						}
-					} else {
-						pressureDirection=0;
 					}
 					prevPressure=pressure;
 					SharedPreferences.Editor sharedPreferencesEditor = PreferenceManager.getDefaultSharedPreferences(context).edit();
