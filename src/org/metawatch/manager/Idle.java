@@ -387,7 +387,8 @@ public class Idle {
 						screenSize = 0;
 					}
 				}
-				screenRow.add(row);
+				if (row.getHeight()!=0)
+					screenRow.add(row);
 				screenSize += row.getHeight();
 			}
 			screens.add(new WidgetPage(screenRow, screens.size()));
