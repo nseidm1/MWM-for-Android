@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
@@ -63,8 +64,10 @@ public class EnvironmentSensorWidget implements InternalWidget, SensorEventListe
 	private Float relativeHumidity = null;
 	private Float prevPressure = null;
 	private Float pressure = null;
-	private final float minPressureDiff = 10;
+	private final float minPressureDiff = 1;
+	private final int minPressureUnchangedCount = 3; 
 	private int pressureDirection=0;
+	private int pressureUnchangedCount=0;
 	private SensorManager sensorManager;
 	private Sensor ambientTemperatureSensor;
 	private Sensor pressureSensor;
@@ -196,7 +199,7 @@ public class EnvironmentSensorWidget implements InternalWidget, SensorEventListe
 		if (event.sensor==ambientTemperatureSensor) {
 			if (ambientTemperature==null)
 				forceUpdate=true;
-			ambientTemperature=event.values[0];			
+			ambientTemperature=event.values[0];	
 		}
 		if (event.sensor==pressureSensor) {
 			if (pressure==null)
@@ -211,6 +214,12 @@ public class EnvironmentSensorWidget implements InternalWidget, SensorEventListe
 							pressureDirection=-1;
 						} else {
 							pressureDirection=+1;						
+						}
+						pressureUnchangedCount=0;
+					} else {
+						pressureUnchangedCount++;
+						if (pressureUnchangedCount>=minPressureUnchangedCount) {
+							pressureDirection=0;
 						}
 					}
 					prevPressure=pressure;
