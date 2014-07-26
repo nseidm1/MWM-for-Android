@@ -4,7 +4,7 @@
       android:versionCode="23"
       android:installLocation="internalOnly" android:versionName="1.26.0.0">
       
-    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="17"/>
+    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="19"/>
     <supports-screens android:resizeable="true" android:normalScreens="true" android:anyDensity="true" 
     	android:largeScreens="true" android:smallScreens="true"/>
     
