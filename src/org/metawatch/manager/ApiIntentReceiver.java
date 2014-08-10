@@ -105,7 +105,6 @@ public class ApiIntentReceiver extends BroadcastReceiver {
 				if (action.equals("org.metawatch.manager.APPLICATION_START")) {
 					int page = Idle.addAppPage(context, app);
 					Idle.toPage(context, page);
-					Idle.updateIdle(context, true);
 				} else {
 					// Auto open as a page, if it's enabled in preferences
 					final String pageSetting = app.getInfo().getPageSettingName();
