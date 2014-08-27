@@ -1490,6 +1490,7 @@ public class MetaWatchService extends Service {
 				break;
 
 			case WatchStates.NOTIFICATION:
+			case WatchStates.CALL:
 
 				switch (button) {
 				case Call.CALL_ANSWER:
