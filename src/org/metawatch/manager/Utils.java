@@ -123,7 +123,7 @@ public class Utils {
 			}
 			else if( isOngoing(System.currentTimeMillis()) && Preferences.readCalendarDuringMeeting ) {
 				final long now = System.currentTimeMillis();
-				return String.valueOf(endTimestamp-(Preferences.readCalendarMinDurationToMeetingEnd+1)*60*1000-now);
+				return String.valueOf((endTimestamp-(Preferences.readCalendarMinDurationToMeetingEnd+1)*60*1000-now)/1000/60);
 			}
 			else {
 				return new SimpleDateFormat("HH:mm").format(startTimestamp);
