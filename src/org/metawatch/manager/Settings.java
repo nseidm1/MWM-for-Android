@@ -318,5 +318,9 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     		CheckBoxPreference withings = (CheckBoxPreference)findPreference("WithingsAccountAuthenticated");
     		withings.setChecked(sharedPreferences.getBoolean("WithingsAccountAuthenticated", false));
     	}
+		if (key.contains("Idle") || key.contains(".app_enabled")) {
+			Idle.reset(this);
+			Idle.updateIdle(this, true);
+		}
     }
 }

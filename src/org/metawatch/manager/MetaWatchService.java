@@ -276,11 +276,6 @@ public class MetaWatchService extends Service {
 				Monitors.restart(context);
 			}
 
-			if (key.contains("Idle") || key.contains(".app_enabled")) {
-				Idle.reset(context);
-				Idle.updateIdle(context, true);
-			}
-
 			if (key.contains("Widget") || (key.equals("SilentMode"))
 					|| key.equals("ClockOnAppBuffers")) {
 				Idle.updateIdle(context, true);
