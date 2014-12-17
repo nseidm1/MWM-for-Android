@@ -145,6 +145,7 @@ public class CalendarApp extends ApplicationBase {
 					if (Preferences.logging) Log.d(MetaWatch.TAG, "CalendarApp.refresh() start");
 					
 					Calendar cal = (Calendar)displayDate.clone();
+					cal.setTimeInMillis(time);
 					cal.set(Calendar.DAY_OF_MONTH, 1);
 					
 					long startTime = cal.getTimeInMillis();
