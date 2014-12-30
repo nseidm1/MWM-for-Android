@@ -280,12 +280,16 @@ public class MetaWatchAccessibilityService extends AccessibilityService {
 					&& (sharedPreferences.getBoolean("notifySMS", true))) {
 				if (notificationBigContentTexts != null) {
 					String from = notificationBigContentTexts.valueAt(0);
-					String message = "WhatsApp: "
-							+ notificationBigContentTexts.valueAt(1) + "\n";
+					String message = "";
+					String contents = "";
 					for (int i = 2; i < notificationBigContentTexts.size(); i++) {
-						message = message
-								+ notificationBigContentTexts.valueAt(i) + "\n";
+						contents += notificationBigContentTexts.valueAt(i) + "\n";
 					}
+					String lines[] = contents.split("\n");
+					for (String line : lines) {
+						message = line + "\n" + message;
+					}
+					message = "WhatsApp: " + notificationBigContentTexts.valueAt(1) + "\n" + message;
 					NotificationBuilder.createSMS(this, from, message);
 					return;
 				}
@@ -296,11 +300,16 @@ public class MetaWatchAccessibilityService extends AccessibilityService {
 					&& (sharedPreferences.getBoolean("notifySMS", true))) {
 				if (notificationBigContentTexts != null) {
 					String from = notificationBigContentTexts.valueAt(0);
-					String message = "Hangouts:\n";
+					String message = "";
+					String contents = "";
 					for (int i = 1; i < notificationBigContentTexts.size(); i++) {
-						message = message
-								+ notificationBigContentTexts.valueAt(i) + "\n";
+						contents += notificationBigContentTexts.valueAt(i) + "\n";
 					}
+					String lines[] = contents.split("\n");
+					for (String line : lines) {
+						message = line + "\n" + message;
+					}
+					message = "Hangouts:\n" + message;
 					NotificationBuilder.createSMS(this, from, message);
 					return;
 				}
